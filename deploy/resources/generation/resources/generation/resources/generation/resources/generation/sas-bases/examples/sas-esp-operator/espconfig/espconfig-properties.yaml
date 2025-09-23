@@ -1,0 +1,44 @@
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: add-properties-to-espconfig
+patch: |-
+#  - op: add
+#    path: /spec/espProperties/server.disableTrace
+#    value: {{ DISABLE-TRACE }}
+#  - op: add
+#    path: /spec/espProperties/server.mas-threads
+#    value: {{ MAS-THREADS }}
+#  - op: add
+#    path: /spec/espProperties/server.store-location
+#    value: {{ STORE-LOCATION }}
+#  - op: add
+#    path: /spec/espProperties/server.loglevel
+#    value: {{ LOG-LEVEL }}
+#  - op: add
+#    path: /spec/espProperties/server.trace
+#    value: {{ TRACE }}
+#  - op: add
+#    path: /spec/espProperties/server.badevents
+#    value: {{ BAD-EVENTS }}
+#  - op: add
+#    path: /spec/espProperties/server.plugins
+#    value: {{ PLUGINS }}
+#  - op: add
+#    path: /spec/espProperties/server.pluginsdir
+#    value: {{ PLUGINS-DIR }}
+#  - op: replace
+#    path: /spec/limits/maxReplicas
+#    value: {{ MAX-REPLICAS }}
+#  - op: replace
+#    path: /spec/limits/maxMemory
+#    value: {{ MAX-MEMORY }}
+#  - op: replace
+#    path: /spec/limits/maxCpu
+#    value: {{ MAX-CPU }}
+target:
+  group: iot.sas.com
+  kind: ESPConfig
+  name: sas-esp-operator
+  version: v1

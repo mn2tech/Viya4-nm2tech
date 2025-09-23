@@ -1,0 +1,25 @@
+# This block of code is for specifying the persistent volume claim size and storage
+# class for RabbitMQ nodes. The default PVC_SIZE is 2Gi. RabbitMQ will use the
+# kubernetes default storage class if not specified below.
+#
+# Note: Comment out either patch below If only one of the patches are desired.
+# Note: We recommend a block storage class for RabbitMQ.
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: rabbitmq-modify-pvc-size
+patch: |-
+    - op: replace
+      path: /spec/volumeClaimTemplates/0/spec/resources/requests/storage
+      value:
+        {{ PVC_SIZE }}
+    - op: add
+      path: /spec/volumeClaimTemplates/0/spec/storageClassName
+      value:
+        {{ STORAGE_CLASS }}
+target:
+  group: apps
+  kind: StatefulSet
+  name: sas-rabbitmq-server
+  version: v1

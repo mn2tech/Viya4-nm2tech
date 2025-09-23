@@ -1,0 +1,29 @@
+# This patch transformer enables a backing store for dynamic memory allocations 
+# across all CAS processes.
+#
+# This transformer does not specify a specific size of the backing store.
+# The CAS Operator selects a default value in either of these situations:
+#    *  CAS auto-resourcing is enabled.
+#    *  the sas-cas-server container specification in the CASDeployment custom
+#       resource specifies a memory resource limit.
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: cas-enable-default-backing-store
+patch: |-
+   - op: add
+     path: /spec/useMemoryBackingStore
+     value: true
+target:
+  group: viya.sas.com
+  kind: CASDeployment
+  # The following name specification targets all CAS servers. To target specific
+  # CAS servers, comment out the following line then uncomment and edit one of the lines
+  # targeting specific CAS servers.
+  name: .*
+  # Uncomment this to apply to one particular named CAS server:
+  #name: {{ NAME-OF-SERVER }}
+  # Uncomment this to apply to the default CAS server:
+  #labelSelector: "sas.com/cas-server-default"
+  version: v1alpha1

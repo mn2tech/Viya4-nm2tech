@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    sas.com/component-name: sas-decisions-runtime-builder-buildkit
+  name: sas-decisions-runtime-builder-buildkit
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    sas.com/component-name: sas-model-publish-buildkit
+  name: sas-model-publish-buildkit
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    sas.com/component-name: sas-buildkit
+  name: sas-buildkit
+automountServiceAccountToken: false

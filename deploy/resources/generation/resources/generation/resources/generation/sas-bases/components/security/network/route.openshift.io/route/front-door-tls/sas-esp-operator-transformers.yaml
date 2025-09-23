@@ -1,0 +1,22 @@
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-esp-server-route-front-door-tls-transformer
+patch: |-
+  - op: replace
+    path: /spec/projectTemplate/route/spec/tls
+    value:
+      termination: edge
+      insecureEdgeTerminationPolicy: Redirect
+  - op: add
+    path: /spec/projectTemplate/route/metadata/annotations/sas.com~1tls-mode
+    value: front-door
+  - op: add
+    path: /spec/projectTemplate/route/metadata/annotations/cert-utils-operator.redhat-cop.io~1certs-from-secret
+    value: sas-ingress-certificate
+  - op: add
+    path: /spec/projectTemplate/route/metadata/annotations/cert-utils-operator.redhat-cop.io~1destinationCA-from-secret
+    value: sas-viya-ca-certificate-secret
+target:
+  kind: ESPConfig

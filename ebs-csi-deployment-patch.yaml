@@ -1,0 +1,18 @@
+spec:
+  template:
+    spec:
+      containers:
+      - name: ebs-plugin
+        env:
+        - name: CSI_ENDPOINT
+          value: unix:///var/lib/csi/sockets/pluginproxy/csi.sock
+        - name: CSI_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: AWS_EC2_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              key: endpoint
+              name: aws-meta
+              optional: true

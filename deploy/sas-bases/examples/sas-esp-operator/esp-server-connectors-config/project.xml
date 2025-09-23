@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project heartbeat-interval="1" name="connectorsconfigexample" pubsub="auto" threads="1">
+  <contqueries>
+    <contquery name="cq1">
+      <windows>
+        <window-source name="source" pubsub="true">
+          <schema>
+            <fields>
+              <field key="true" name="id" type="int64"/>
+              <field name="time" type="stamp"/>
+              <field name="label" type="string"/>
+            </fields>
+          </schema>
+          <connectors>
+            <connector class="timer" name="source_timer">
+              <properties>
+                <property name="configfilesection"><![CDATA[[timer_pub]]]></property>
+              </properties>
+            </connector>
+          </connectors>
+        </window-source>
+        <window-copy name="copy" pubsub="true">
+          <retention type="bycount_sliding">5</retention>
+        </window-copy>
+        <window-filter name="even" pubsub="true">
+          <expression>id%2 == 0</expression>
+          <connectors>
+            <connector class="fs" name="even_fs">
+              <properties>
+                <property name="configfilesection"><![CDATA[[fs_sub]]]></property>
+              </properties>
+            </connector>
+          </connectors>
+        </window-filter>
+        <window-filter name="odd" pubsub="true">
+          <expression>id%2 == 1</expression>
+        </window-filter>
+      </windows>
+      <edges>
+        <edge source="source" target="copy"/>
+        <edge source="source" target="even"/>
+        <edge source="source" target="odd"/>
+      </edges>
+    </contquery>
+  </contqueries>
+</project>

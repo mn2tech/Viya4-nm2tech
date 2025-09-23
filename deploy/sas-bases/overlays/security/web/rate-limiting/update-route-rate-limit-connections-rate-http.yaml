@@ -1,0 +1,17 @@
+---
+apiVersion: builtin
+kind: ReplacementTransformer
+metadata:
+  name: update-rateLimitConnectionsRateHttp-annotation-route-transformer
+replacements:
+- source:
+    kind: ConfigMap
+    name: route-rate-limit-inputs
+    fieldPath: data.rateLimitConnectionsRateHttp
+  targets:
+  - select:
+      kind: Route
+    fieldPaths:
+      - metadata.annotations.haproxy\.router\.openshift\.io/rate-limit-connections\.rate-http
+    options:
+      create: true

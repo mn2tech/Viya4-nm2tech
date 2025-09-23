@@ -1,0 +1,28 @@
+---
+nameReference:
+- kind: ConfigMap
+  version: v1
+  fieldSpecs:
+  - path: spec/projectTemplate/deployment/spec/template/spec/containers/envFrom/configMapRef/name
+    kind: ESPConfig
+  - path: spec/projectTemplate/deployment/spec/template/spec/initContainers/envFrom/configMapRef/name
+    kind: ESPConfig
+  - path: spec/projectTemplate/deployment/spec/template/spec/volumes/configMap/name
+    kind: ESPConfig
+  - path: spec/loadBalancerTemplate/deployment/spec/template/spec/containers/envFrom/configMapRef/name
+    kind: ESPConfig
+  - path: spec/loadBalancerTemplate/deployment/spec/template/spec/initContainers/envFrom/configMapRef/name
+    kind: ESPConfig
+  - path: spec/loadBalancerTemplate/deployment/spec/template/spec/volumes/configMap/name
+    kind: ESPConfig
+  - path: spec/routerTemplate/deployment/spec/template/spec/containers/envFrom/configMapRef/name
+    kind: ESPConfig
+  - path: spec/routerTemplate/deployment/spec/template/spec/initContainers/envFrom/configMapRef/name
+    kind: ESPConfig
+  - path: spec/routerTemplate/deployment/spec/template/spec/volumes/configMap/name
+    kind: ESPConfig
+- kind: Secret
+  version: v1
+  fieldSpecs:
+  - path: spec/projectTemplate/ingress/spec/tls/secretName
+    kind: ESPConfig

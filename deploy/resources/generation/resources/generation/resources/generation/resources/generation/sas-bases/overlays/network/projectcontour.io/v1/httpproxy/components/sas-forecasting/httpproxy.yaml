@@ -1,0 +1,306 @@
+---
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  annotations:
+    sas.com/kustomize-base: base
+  labels:
+    app.kubernetes.io/name: sas-forecasting-comparison
+    sas.com/admin: namespace
+  name: sas-forecasting-comparison
+spec:
+  routes:
+  - conditions:
+    - prefix: /forecastingComparison
+    loadBalancerPolicy:
+      strategy: Cookie
+    pathRewritePolicy:
+      replacePrefix:
+      - replacement: /forecastingComparison/
+    services:
+    - name: sas-forecasting-comparison
+      port: 80
+    timeoutPolicy:
+      response: 300s
+  - conditions:
+    - prefix: /forecastingComparison/
+    loadBalancerPolicy:
+      strategy: Cookie
+    services:
+    - name: sas-forecasting-comparison
+      port: 80
+    timeoutPolicy:
+      response: 300s
+
+---
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  annotations:
+    sas.com/kustomize-base: base
+  labels:
+    app.kubernetes.io/name: sas-forecasting-data-definition
+    sas.com/admin: namespace
+  name: sas-forecasting-data-definition
+spec:
+  routes:
+  - conditions:
+    - prefix: /forecastingDataDefinition
+    loadBalancerPolicy:
+      strategy: Cookie
+    pathRewritePolicy:
+      replacePrefix:
+      - replacement: /forecastingDataDefinition/
+    services:
+    - name: sas-forecasting-data-definition
+      port: 80
+    timeoutPolicy:
+      response: 300s
+  - conditions:
+    - prefix: /forecastingDataDefinition/
+    loadBalancerPolicy:
+      strategy: Cookie
+    services:
+    - name: sas-forecasting-data-definition
+      port: 80
+    timeoutPolicy:
+      response: 300s
+
+---
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  annotations:
+    sas.com/kustomize-base: base
+  labels:
+    app.kubernetes.io/name: sas-forecasting-events
+    sas.com/admin: namespace
+  name: sas-forecasting-events
+spec:
+  routes:
+  - conditions:
+    - prefix: /forecastingEvents
+    loadBalancerPolicy:
+      strategy: Cookie
+    pathRewritePolicy:
+      replacePrefix:
+      - replacement: /forecastingEvents/
+    services:
+    - name: sas-forecasting-events
+      port: 80
+    timeoutPolicy:
+      response: 300s
+  - conditions:
+    - prefix: /forecastingEvents/
+    loadBalancerPolicy:
+      strategy: Cookie
+    services:
+    - name: sas-forecasting-events
+      port: 80
+    timeoutPolicy:
+      response: 300s
+
+---
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  annotations:
+    sas.com/kustomize-base: base
+  labels:
+    app.kubernetes.io/name: sas-forecasting-exploration
+    sas.com/admin: namespace
+  name: sas-forecasting-exploration
+spec:
+  routes:
+  - conditions:
+    - prefix: /forecastingExploration
+    loadBalancerPolicy:
+      strategy: Cookie
+    pathRewritePolicy:
+      replacePrefix:
+      - replacement: /forecastingExploration/
+    services:
+    - name: sas-forecasting-exploration
+      port: 80
+    timeoutPolicy:
+      response: 300s
+  - conditions:
+    - prefix: /forecastingExploration/
+    loadBalancerPolicy:
+      strategy: Cookie
+    services:
+    - name: sas-forecasting-exploration
+      port: 80
+    timeoutPolicy:
+      response: 300s
+
+---
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  annotations:
+    sas.com/kustomize-base: base
+  labels:
+    app.kubernetes.io/name: sas-forecasting-filters
+    sas.com/admin: namespace
+  name: sas-forecasting-filters
+spec:
+  routes:
+  - conditions:
+    - prefix: /forecastingFilters
+    loadBalancerPolicy:
+      strategy: Cookie
+    pathRewritePolicy:
+      replacePrefix:
+      - replacement: /forecastingFilters/
+    services:
+    - name: sas-forecasting-filters
+      port: 80
+    timeoutPolicy:
+      response: 300s
+  - conditions:
+    - prefix: /forecastingFilters/
+    loadBalancerPolicy:
+      strategy: Cookie
+    services:
+    - name: sas-forecasting-filters
+      port: 80
+    timeoutPolicy:
+      response: 300s
+
+---
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  annotations:
+    sas.com/kustomize-base: base
+  labels:
+    app.kubernetes.io/name: sas-forecasting-gateway
+    sas.com/admin: namespace
+  name: sas-forecasting-gateway
+spec:
+  routes:
+  - conditions:
+    - prefix: /forecastingGateway
+    loadBalancerPolicy:
+      strategy: Cookie
+    pathRewritePolicy:
+      replacePrefix:
+      - replacement: /forecastingGateway/
+    services:
+    - name: sas-forecasting-gateway
+      port: 80
+    timeoutPolicy:
+      response: 300s
+  - conditions:
+    - prefix: /forecastingGateway/
+    loadBalancerPolicy:
+      strategy: Cookie
+    services:
+    - name: sas-forecasting-gateway
+      port: 80
+    timeoutPolicy:
+      response: 300s
+
+---
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  annotations:
+    sas.com/kustomize-base: base
+  labels:
+    app.kubernetes.io/name: sas-forecasting-models
+    sas.com/admin: namespace
+  name: sas-forecasting-models
+spec:
+  routes:
+  - conditions:
+    - prefix: /forecastingModels
+    loadBalancerPolicy:
+      strategy: Cookie
+    pathRewritePolicy:
+      replacePrefix:
+      - replacement: /forecastingModels/
+    services:
+    - name: sas-forecasting-models
+      port: 80
+    timeoutPolicy:
+      response: 300s
+  - conditions:
+    - prefix: /forecastingModels/
+    loadBalancerPolicy:
+      strategy: Cookie
+    services:
+    - name: sas-forecasting-models
+      port: 80
+    timeoutPolicy:
+      response: 300s
+
+---
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  annotations:
+    sas.com/kustomize-base: base
+  labels:
+    app.kubernetes.io/name: sas-forecasting-overrides
+    sas.com/admin: namespace
+  name: sas-forecasting-overrides
+spec:
+  routes:
+  - conditions:
+    - prefix: /forecastingOverrides
+    loadBalancerPolicy:
+      strategy: Cookie
+    pathRewritePolicy:
+      replacePrefix:
+      - replacement: /forecastingOverrides/
+    services:
+    - name: sas-forecasting-overrides
+      port: 80
+    timeoutPolicy:
+      response: 300s
+  - conditions:
+    - prefix: /forecastingOverrides/
+    loadBalancerPolicy:
+      strategy: Cookie
+    services:
+    - name: sas-forecasting-overrides
+      port: 80
+    timeoutPolicy:
+      response: 300s
+
+---
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  annotations:
+    sas.com/kustomize-base: base
+  labels:
+    app.kubernetes.io/name: sas-forecasting-pipelines
+    sas.com/admin: namespace
+  name: sas-forecasting-pipelines
+spec:
+  routes:
+  - conditions:
+    - prefix: /forecastingPipelines
+    loadBalancerPolicy:
+      strategy: Cookie
+    pathRewritePolicy:
+      replacePrefix:
+      - replacement: /forecastingPipelines/
+    services:
+    - name: sas-forecasting-pipelines
+      port: 80
+    timeoutPolicy:
+      response: 300s
+  - conditions:
+    - prefix: /forecastingPipelines/
+    loadBalancerPolicy:
+      strategy: Cookie
+    services:
+    - name: sas-forecasting-pipelines
+      port: 80
+    timeoutPolicy:
+      response: 300s
+

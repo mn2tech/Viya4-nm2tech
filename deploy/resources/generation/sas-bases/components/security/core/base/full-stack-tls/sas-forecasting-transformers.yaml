@@ -1,0 +1,418 @@
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-base-deployment-sas-forecasting-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /spec/template/spec/initContainers/0
+    value:
+      name: sas-certframe
+      image: sas-certframe
+      env:
+      - name: KUBE_POD_NAME
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: SAS_CERTFRAME_TOKEN_DIR
+        value: /certframe-token
+      - name: SAS_ADDITIONAL_CA_CERTIFICATES_DIR
+        value: /customer-provided-ca-certificates
+      envFrom:
+      - configMapRef:
+          name: sas-certframe-config
+      - configMapRef:
+          name: sas-certframe-ingress-certificate-config
+      - configMapRef:
+          name: sas-certframe-user-config
+      volumeMounts:
+      - name: certframe-token
+        mountPath: /certframe-token
+      - name: security
+        mountPath: /security
+      - name: customer-provided-ca-certificates
+        mountPath: /customer-provided-ca-certificates
+      resources:
+        requests:
+          memory: "50Mi"
+          cpu: "50m"
+        limits:
+          memory: "500Mi"
+          cpu: "500m"
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        privileged: false
+        readOnlyRootFilesystem: true
+  - op: add
+    path: /spec/template/spec/volumes/-
+    value:
+      name: certframe-token
+      secret:
+        secretName: sas-certframe-token
+  - op: add
+    path: /spec/template/spec/volumes/-
+    value:
+      name: security
+      emptyDir: {}
+  - op: add
+    path: /spec/template/spec/volumes/-
+    value:
+      name: customer-provided-ca-certificates
+      configMap:
+        name: sas-customer-provided-ca-certificates
+  - op: add
+    path: /spec/template/spec/containers/0/volumeMounts/-
+    value:
+      name: security
+      mountPath: /security
+  - op: add
+    path: /spec/template/spec/containers/0/volumeMounts/-
+    value:
+      name: security
+      mountPath: /opt/sas/viya/config/etc/SASSecurityCertificateFramework/cacerts
+      subPath: cacerts
+  - op: add
+    path: /spec/template/spec/containers/0/volumeMounts/-
+    value:
+      name: security
+      mountPath: /opt/sas/viya/config/etc/SASSecurityCertificateFramework/private
+      subPath: private
+  - op: add
+    path: /spec/template/metadata/annotations/sas.com~1tls-enabled-ports
+    value: all
+  - op: replace
+    path: /spec/template/metadata/annotations/prometheus.io~1scheme
+    value: https
+  - op: add
+    path: /spec/template/metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: add
+    path: /spec/template/spec/containers/0/envFrom/0
+    value:
+      configMapRef:
+        name: sas-tls-config
+target:
+  kind: Deployment
+  name: sas-forecasting
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-golang-base-deployment-sas-forecasting-full-stack-tls-transformer
+patch: |-
+  - op: replace
+    path: /spec/template/spec/containers/0/readinessProbe/httpGet/scheme
+    value: HTTPS
+  - op: replace
+    path: /spec/template/spec/containers/0/livenessProbe/httpGet/scheme
+    value: HTTPS
+  - op: replace
+    path: /spec/template/spec/containers/0/startupProbe/httpGet/scheme
+    value: HTTPS
+target:
+  kind: Deployment
+  name: sas-forecasting
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-golang-db-migrator-deployment-sas-forecasting-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /spec/template/spec/initContainers/2/env/-
+    value:
+      name: SSL_CERT_FILE
+      value: /security/trustedcerts.pem
+  - op: add
+    path: /spec/template/spec/initContainers/2/volumeMounts/-
+    value:
+      name: security
+      mountPath: /security
+target:
+  kind: Deployment
+  name: sas-forecasting
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-service-sas-forecasting-comparison-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/ports/0/port
+    value: 443
+target:
+  kind: Service
+  name: sas-forecasting-comparison
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-service-sas-forecasting-comparison-full-tls-transformer-prometheus
+patch: |-
+  - op: replace
+    path: /metadata/annotations/prometheus.io~1port
+    value: "443"
+  - op: replace
+    path: /metadata/annotations/prometheus.io~1scheme
+    value: https
+target:
+  kind: Service
+  name: sas-forecasting-comparison
+  annotationSelector: prometheus.io/scrape=true
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-service-sas-forecasting-data-definition-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/ports/0/port
+    value: 443
+target:
+  kind: Service
+  name: sas-forecasting-data-definition
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-service-sas-forecasting-data-definition-full-tls-transformer-prometheus
+patch: |-
+  - op: replace
+    path: /metadata/annotations/prometheus.io~1port
+    value: "443"
+  - op: replace
+    path: /metadata/annotations/prometheus.io~1scheme
+    value: https
+target:
+  kind: Service
+  name: sas-forecasting-data-definition
+  annotationSelector: prometheus.io/scrape=true
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-service-sas-forecasting-events-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/ports/0/port
+    value: 443
+target:
+  kind: Service
+  name: sas-forecasting-events
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-service-sas-forecasting-events-full-tls-transformer-prometheus
+patch: |-
+  - op: replace
+    path: /metadata/annotations/prometheus.io~1port
+    value: "443"
+  - op: replace
+    path: /metadata/annotations/prometheus.io~1scheme
+    value: https
+target:
+  kind: Service
+  name: sas-forecasting-events
+  annotationSelector: prometheus.io/scrape=true
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-service-sas-forecasting-exploration-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/ports/0/port
+    value: 443
+target:
+  kind: Service
+  name: sas-forecasting-exploration
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-service-sas-forecasting-exploration-full-tls-transformer-prometheus
+patch: |-
+  - op: replace
+    path: /metadata/annotations/prometheus.io~1port
+    value: "443"
+  - op: replace
+    path: /metadata/annotations/prometheus.io~1scheme
+    value: https
+target:
+  kind: Service
+  name: sas-forecasting-exploration
+  annotationSelector: prometheus.io/scrape=true
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-service-sas-forecasting-filters-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/ports/0/port
+    value: 443
+target:
+  kind: Service
+  name: sas-forecasting-filters
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-service-sas-forecasting-filters-full-tls-transformer-prometheus
+patch: |-
+  - op: replace
+    path: /metadata/annotations/prometheus.io~1port
+    value: "443"
+  - op: replace
+    path: /metadata/annotations/prometheus.io~1scheme
+    value: https
+target:
+  kind: Service
+  name: sas-forecasting-filters
+  annotationSelector: prometheus.io/scrape=true
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-service-sas-forecasting-gateway-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/ports/0/port
+    value: 443
+target:
+  kind: Service
+  name: sas-forecasting-gateway
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-service-sas-forecasting-gateway-full-tls-transformer-prometheus
+patch: |-
+  - op: replace
+    path: /metadata/annotations/prometheus.io~1port
+    value: "443"
+  - op: replace
+    path: /metadata/annotations/prometheus.io~1scheme
+    value: https
+target:
+  kind: Service
+  name: sas-forecasting-gateway
+  annotationSelector: prometheus.io/scrape=true
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-service-sas-forecasting-models-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/ports/0/port
+    value: 443
+target:
+  kind: Service
+  name: sas-forecasting-models
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-service-sas-forecasting-models-full-tls-transformer-prometheus
+patch: |-
+  - op: replace
+    path: /metadata/annotations/prometheus.io~1port
+    value: "443"
+  - op: replace
+    path: /metadata/annotations/prometheus.io~1scheme
+    value: https
+target:
+  kind: Service
+  name: sas-forecasting-models
+  annotationSelector: prometheus.io/scrape=true
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-service-sas-forecasting-overrides-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/ports/0/port
+    value: 443
+target:
+  kind: Service
+  name: sas-forecasting-overrides
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-service-sas-forecasting-overrides-full-tls-transformer-prometheus
+patch: |-
+  - op: replace
+    path: /metadata/annotations/prometheus.io~1port
+    value: "443"
+  - op: replace
+    path: /metadata/annotations/prometheus.io~1scheme
+    value: https
+target:
+  kind: Service
+  name: sas-forecasting-overrides
+  annotationSelector: prometheus.io/scrape=true
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-service-sas-forecasting-pipelines-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/ports/0/port
+    value: 443
+target:
+  kind: Service
+  name: sas-forecasting-pipelines
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-service-sas-forecasting-pipelines-full-tls-transformer-prometheus
+patch: |-
+  - op: replace
+    path: /metadata/annotations/prometheus.io~1port
+    value: "443"
+  - op: replace
+    path: /metadata/annotations/prometheus.io~1scheme
+    value: https
+target:
+  kind: Service
+  name: sas-forecasting-pipelines
+  annotationSelector: prometheus.io/scrape=true

@@ -1,0 +1,17 @@
+---
+apiVersion: builtin
+kind: ReplacementTransformer
+metadata:
+  name: update-limitConnections-annotation-ingress-transformer
+replacements:
+- source:
+    kind: ConfigMap
+    name: ingress-nginx-rate-limit-inputs
+    fieldPath: data.limitConnections
+  targets:
+  - select:
+      kind: Ingress
+    fieldPaths:
+      - metadata.annotations.nginx\.ingress\.kubernetes\.io/limit-connections
+    options:
+      create: true

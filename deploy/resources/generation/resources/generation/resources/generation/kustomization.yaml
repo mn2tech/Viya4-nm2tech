@@ -1,0 +1,51 @@
+namespace: sasoperator
+resources:
+- sas-bases/base
+- sas-bases/overlays/network/networking.k8s.io 
+- site-config/security/openssl-generated-ingress-certificate.yaml 
+- sas-bases/overlays/cas-server
+- sas-bases/overlays/crunchydata/postgres-operator
+- sas-bases/overlays/postgres/platform-postgres
+# If your deployment contains SAS Viya Programming, comment out the next line
+- sas-bases/overlays/internal-elasticsearch
+- sas-bases/overlays/update-checker
+- sas-bases/overlays/cas-server/auto-resources
+configurations:
+- sas-bases/overlays/required/kustomizeconfig.yaml
+transformers:
+# If your deployment does not support privileged containers or if your deployment
+# contains SAS Viya Programming, comment out the next line
+- sas-bases/overlays/internal-elasticsearch/sysctl-transformer.yaml
+- sas-bases/overlays/required/transformers.yaml
+- sas-bases/overlays/cas-server/auto-resources/remove-resources.yaml 
+# If your deployment contains SAS Viya Programming, comment out the next line
+- sas-bases/overlays/internal-elasticsearch/internal-elasticsearch-transformer.yaml
+# Mount information
+# - site-config/{{ DIRECTORY-PATH }}/cas-add-host-mount.yaml
+components:
+- sas-bases/components/crunchydata/internal-platform-postgres 
+- sas-bases/components/security/core/base/full-stack-tls 
+- sas-bases/components/security/network/networking.k8s.io/ingress/nginx.ingress.kubernetes.io/full-stack-tls 
+patches:
+- path: site-config/storageclass.yaml 
+  target:
+    kind: PersistentVolumeClaim
+    annotationSelector: sas.com/component-name in (sas-backup-job,sas-data-quality-services,sas-commonfiles,sas-cas-operator,sas-pyconfig,sas-risk-cirrus-search,sas-risk-modeling-core,sas-event-stream-processing-studio-app)
+# License information
+# secretGenerator:
+# - name: sas-license
+#   type: sas.com/license
+#   behavior: merge
+#   files:
+#   - SAS_LICENSE=license.jwt
+configMapGenerator:
+- name: ingress-input
+  behavior: merge
+  literals:
+  - INGRESS_HOST=a010597ba0a7d4b7e8b7cb6572ae6820-1994512981.us-east-1.elb.amazonaws.com
+
+- name: sas-shared-config
+  behavior: merge
+  literals:
+  - SAS_SERVICES_URL=https://a010597ba0a7d4b7e8b7cb6572ae6820-1994512981.us-east-1.elb.amazonaws.com:443 
+  # - SAS_URL_EXTERNAL_VIYA={{ EXTERNAL-PROXY-URL }}

@@ -1,0 +1,256 @@
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  annotations:
+    orchestration.sas.com/literal: "true"
+  name: sas-redis-server-secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    sas.com/contextRoot: ""
+  labels:
+    app.kubernetes.io/name: sas-redis-server
+    sas.com/admin: namespace
+    sas.com/registry-sync: default
+  name: sas-redis-server-cluster
+spec:
+  clusterIP: None
+  ports:
+  - name: tcp
+    port: 6379
+    protocol: TCP
+    targetPort: 6379
+  publishNotReadyAddresses: true
+  selector:
+    app.kubernetes.io/name: sas-redis-server
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations:
+    sas.com/certificate-file-format: pem
+    sas.com/kustomize-base: base
+    sas.com/pod-uses-liveness-probe: exec
+    sas.com/pod-uses-readiness-probe: exec
+    sas.com/pod-uses-startup-probe: exec
+    sidecar.istio.io/proxyCPU: 15m
+    sidecar.istio.io/proxyMemory: 115Mi
+  labels:
+    app.kubernetes.io/name: sas-redis-server
+    sas.com/admin: namespace
+    workload.sas.com/class: stateful
+  name: sas-redis-server
+spec:
+  podManagementPolicy: Parallel
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: sas-redis-server
+  serviceName: sas-redis-server-cluster
+  template:
+    metadata:
+      annotations:
+        sas.com/certificate-file-format: pem
+        sas.com/kustomize-base: base
+        sas.com/pod-uses-liveness-probe: exec
+        sas.com/pod-uses-readiness-probe: exec
+        sas.com/pod-uses-startup-probe: exec
+        sidecar.istio.io/proxyCPU: 15m
+        sidecar.istio.io/proxyMemory: 115Mi
+      labels:
+        app: sas-redis-server
+        app.kubernetes.io/name: sas-redis-server
+        workload.sas.com/class: stateful
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - preference:
+              matchExpressions:
+              - key: workload.sas.com/class
+                operator: In
+                values:
+                - stateful
+            weight: 100
+          - preference:
+              matchExpressions:
+              - key: workload.sas.com/class
+                operator: NotIn
+                values:
+                - compute
+                - cas
+                - stateless
+            weight: 50
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.azure.com/mode
+                operator: NotIn
+                values:
+                - system
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution: []
+          requiredDuringSchedulingIgnoredDuringExecution: []
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - sas-redis-server
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+          requiredDuringSchedulingIgnoredDuringExecution: []
+      automountServiceAccountToken: false
+      containers:
+      - env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        envFrom:
+        - configMapRef:
+            name: sas-shared-config
+        - secretRef:
+            name: sas-consul-client
+        - secretRef:
+            name: sas-redis-server-secret
+        - configMapRef:
+            name: sas-go-config
+        - secretRef:
+            name: sas-consul-client
+        image: sas-redis-server
+        imagePullPolicy: IfNotPresent
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - /opt/sas/viya/home/sbin/shutdown.sh
+        livenessProbe:
+          exec:
+            command:
+            - /opt/sas/viya/home/sbin/liveness.sh
+          initialDelaySeconds: 5
+          periodSeconds: 30
+          timeoutSeconds: 10
+        name: sas-redis-server
+        ports:
+        - containerPort: 6379
+          name: tcp
+          protocol: TCP
+        - containerPort: 16379
+          name: gossip
+          protocol: TCP
+        readinessProbe:
+          exec:
+            command:
+            - /opt/sas/viya/home/sbin/readiness.sh
+          initialDelaySeconds: 5
+          timeoutSeconds: 10
+        resources:
+          limits:
+            cpu: "1"
+            memory: 500Mi
+          requests:
+            cpu: 50m
+            memory: 300Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            add: []
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        startupProbe:
+          exec:
+            command:
+            - /opt/sas/viya/home/sbin/liveness.sh
+          failureThreshold: 30
+          periodSeconds: 10
+          timeoutSeconds: 10
+        volumeMounts:
+        - mountPath: /opt/sas/viya/config/redis/includes
+          name: sas-viya-redis-config
+          subPath: includes
+        - mountPath: /data
+          name: sas-viya-redis-data-volume
+      imagePullSecrets: []
+      initContainers:
+      - env:
+        - name: SAS_KEYS_SECRET_NAME
+          value: sas-redis-server-secret
+        - name: SAS_KEYS_KEY_NAMES
+          value: REDIS_DEFAULT_PASS REDIS_ADMIN_PASS
+        - name: SAS_SECURITY_ARTIFACTS_DIR
+          value: /security
+        - name: SAS_CERTFRAME_TOKEN_DIR
+          value: /certframe-token
+        image: sas-certframe
+        name: sas-certframe-token-generator
+        resources:
+          limits:
+            cpu: 500m
+            memory: 500Mi
+          requests:
+            cpu: 50m
+            memory: 50Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /security
+          name: security
+        - mountPath: /certframe-token
+          name: certframe-token
+      restartPolicy: Always
+      securityContext:
+        fsGroup: 1001
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      terminationGracePeriodSeconds: 60
+      tolerations:
+      - effect: NoSchedule
+        key: workload.sas.com/class
+        operator: Equal
+        value: stateful
+      - effect: NoSchedule
+        key: workload.sas.com/class
+        operator: Equal
+        value: stateless
+      volumes:
+      - name: certframe-token
+        secret:
+          secretName: sas-certframe-token
+      - emptyDir: {}
+        name: security
+      - emptyDir: {}
+        name: sas-viya-redis-config
+  volumeClaimTemplates:
+  - metadata:
+      name: sas-viya-redis-data-volume
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi

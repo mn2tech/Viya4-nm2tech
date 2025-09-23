@@ -1,0 +1,36 @@
+## Example ConfigMap that defines the rate limit inputs for the OpenShift router. 
+## The inputs in this ConfigMap are all commented out by default. To enforce a limit,
+## uncomment the desired input and define a value as described below. If you include 
+## this ConfigMap, ensure that you have uncommented and defined at least one input.
+##
+## The location that requires a user specified value is indicated by a capitalized and
+## name set off by curly braces and a space at each end. Replace this token with the
+## actual value. Replace the curly braces, interior spaces, and the variable name.
+## For instance, {{ CONCURRENT_CONNECTION_LIMIT }} should be replaced by the desired
+## limit for concurrent connections.
+## Example:
+##   rateLimitConnectionsConcurrentTcp: "50"
+##
+## The inputs map directly to annotations supported by OpenShift for rate limiting.
+## The supported annotations are listed below. See the OpenShift documentation for 
+## more details about each annotation. The actual annotation will be added by the
+## transformers added as described in the README.md file.
+## https://docs.openshift.com/container-platform/4.17/networking/routes/route-configuration.html
+##
+## Supported annotations:
+##   haproxy.router.openshift.io/rate-limit-connections
+##   haproxy.router.openshift.io/rate-limit-connections.concurrent-tcp
+##   haproxy.router.openshift.io/rate-limit-connections.rate-http
+##   haproxy.router.openshift.io/rate-limit-connections.rate-tcp
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: route-rate-limit-inputs
+  labels:
+    sas.com/admin: none
+data:
+  # rateLimitConnections: "{{ RATE_LIMIT_CONNECTIONS_BOOLEAN }}"
+  # rateLimitConnectionsConcurrentTcp: "{{ CONCURRENT_CONNECTION_LIMIT }}"
+  # rateLimitConnectionsRateHttp: "{{ REQUEST_RATE_LIMIT_HTTP }}"
+  # rateLimitConnectionsRateTcp: "{{ CONNECTION_RATE_LIMIT_TCP }}"

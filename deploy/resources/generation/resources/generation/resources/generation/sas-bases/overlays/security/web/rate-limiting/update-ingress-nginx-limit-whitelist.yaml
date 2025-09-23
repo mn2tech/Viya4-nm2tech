@@ -1,0 +1,17 @@
+---
+apiVersion: builtin
+kind: ReplacementTransformer
+metadata:
+  name: update-limitWhitelist-annotation-ingress-transformer
+replacements:
+- source:
+    kind: ConfigMap
+    name: ingress-nginx-rate-limit-inputs
+    fieldPath: data.limitWhitelist
+  targets:
+  - select:
+      kind: Ingress
+    fieldPaths:
+      - metadata.annotations.nginx\.ingress\.kubernetes\.io/limit-whitelist
+    options:
+      create: true

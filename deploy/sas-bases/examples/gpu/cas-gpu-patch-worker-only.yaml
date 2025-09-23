@@ -1,0 +1,48 @@
+# This block of code is for enabling CAS GPU support
+# for CAS Worker nodes on Cloud providers that do
+# not require the SAS GPU Reservation Service (sasgpud).
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: cas-vars
+patch: |-
+  apiVersion: viya.sas.com/v1alpha1
+  kind: CASDeployment
+  metadata:
+    name: cas-vars
+  spec:
+    workerTemplateAdditions:
+      spec:
+        containers:
+        - env:
+          - name: NVIDIA_DRIVER_CAPABILITIES
+            value: all
+          - name: NVIDIA_REQUIRE_CUDA
+            value: "brand=quadro brand=tesla arch=pascal arch=volta arch=turing driver>=410.48"
+          - name: SAS_USE_LOCAL_SASGPUD
+            value: "True"
+          - name: SAS_GPUD_LOG_TYPE
+            value: "error"
+          name: sas-cas-server
+          volumeMounts:
+            - mountPath: /var/tmp/sasgpud
+              name: sasgpud-volume
+          resources:
+            requests:
+              nvidia.com/gpu: 1
+            limits:
+              nvidia.com/gpu: 1        
+        volumes:
+          - emptyDir: {}
+            name: sasgpud-volume
+target:
+  group: viya.sas.com
+  kind: CASDeployment
+  # Uncomment this to apply to all CAS servers:
+  name: .*
+  # Uncomment this to apply to one particular named CAS server:
+  #name: {{ NAME-OF-SERVER }}
+  # Uncomment this to apply to the default CAS server:
+  #labelSelector: "sas.com/cas-server-default"
+  version: v1alpha1
+---

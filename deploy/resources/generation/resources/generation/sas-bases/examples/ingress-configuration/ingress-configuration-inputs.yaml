@@ -1,0 +1,21 @@
+## Example ConfigMap that defines the ingress configuration inputs. The inputs
+## in this ConfigMap are all commented out by default. To specify an input, uncomment the
+## desired input and define a value as described below. If you include this ConfigMap,
+## ensure that you have uncommented and defined at least one input.
+##
+## The location that requires a user-specified value is indicated by a capitalized
+## name set off by curly braces and a space at each end. Replace this token with the
+## actual value. Replace the curly braces, interior spaces, and the variable name.
+## For instance, {{ INGRESS_CLASS_NAME }} should be replaced by the desired class name for
+## this deployment's Ingress resources.
+## Example:
+##   className: "viya-ingress-class"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ingress-configuration-inputs
+  labels:
+    sas.com/admin: none
+data:
+  # className: "{{ INGRESS_CLASS_NAME }}"

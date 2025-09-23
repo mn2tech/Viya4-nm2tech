@@ -1,0 +1,68 @@
+# This patch transformer enables two backing stores for dynamic memory 
+# allocations across CAS processes.
+# 
+# This transformer is appropriate (but not required) for deployments enabling 
+# CAS resource management, with a separate backing store for each resource
+# management priority group.
+# 
+# This transformer establishes one backing store for users in priority group
+# one and a second backing store for all other users.
+#
+# Choose the size of each individual backing store before deployment.
+# The total size of all resource groups should not exceed 80% of the total memory
+# on the nodes that support CAS Pods.
+#
+# The MEMORY_SIZE_* values are a numeric value followed by the units,
+# such as 32Gi for 32 gigabytes. In Kubernetes, the units for gigabytes is Gi and
+# is case-sensitive.
+#
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: cas-add-tk-backing-store-with-priority-group-one
+patch: |-
+  - op: add
+    path: /spec/useMemoryBackingStore
+    value: false
+  - op: add
+    path: /spec/controllerTemplate/spec/containers/0/env/-
+    value:
+      name: TK_BACKING_STORE_DIR
+      value: /cas/tkMemory
+  - op: add
+    path: /spec/controllerTemplate/spec/containers/0/volumeMounts/-
+    value:
+      name: tk-backing-store-1
+      mountPath: /cas/tkMemory/1
+  - op: add
+    path: /spec/controllerTemplate/spec/containers/0/volumeMounts/-
+    value:
+      name: tk-backing-store-other
+      mountPath: /cas/tkMemory
+  - op: add
+    path: /spec/controllerTemplate/spec/volumes/-
+    value:
+      name: tk-backing-store-1
+      emptyDir:
+        medium: Memory
+        sizeLimit: {{ MEMORY_SIZE_1 }}
+  - op: add
+    path: /spec/controllerTemplate/spec/volumes/-
+    value:
+      name: tk-backing-store-other
+      emptyDir:
+        medium: Memory
+        sizeLimit: {{ MEMORY_SIZE_OTHER }}
+target:
+  group: viya.sas.com
+  kind: CASDeployment
+  # The following name specification targets all CAS servers. To target specific
+  # CAS servers, comment out the following line then uncomment and edit one of the lines
+  # targeting specific CAS servers.
+  name: .*
+  # Uncomment this to apply to one particular named CAS server:
+  #name: {{ NAME-OF-SERVER }}
+  # Uncomment this to apply to the default CAS server:
+  #labelSelector: "sas.com/cas-server-default"
+  version: v1alpha1

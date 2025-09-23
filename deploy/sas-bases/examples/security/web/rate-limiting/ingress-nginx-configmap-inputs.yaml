@@ -1,0 +1,42 @@
+## Example ConfigMap that defines the rate limit inputs for ingress-nginx. The inputs
+## in this ConfigMap are all commented out by default. To enforce a limit, uncomment the
+## desired input and define a value as described below. If you include this ConfigMap,
+## ensure that you have uncommented and defined at least one input.
+##
+## The location that requires a user specified value is indicated by a capitalized and
+## name set off by curly braces and a space at each end. Replace this token with the
+## actual value. Replace the curly braces, interior spaces, and the variable name.
+## For instance, {{ CONNECTION_LIMIT }} should be replaced by the desired limit for
+## concurrent connections.
+## Example:
+##   limitConnections: "50"
+##
+## The inputs map directly to annotations supported by ingress-nginx for rate limiting.
+## The supported annotations are listed below. See the ingres-nginx documentation for 
+## more details about each annotation. The actual annotation will be added by the
+## transformers added as described in the README.md file.
+## https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md#rate-limiting
+##
+## Supported annotations:
+##   nginx.ingress.kubernetes.io/limit-connections
+##   nginx.ingress.kubernetes.io/limit-rps
+##   nginx.ingress.kubernetes.io/limit-rpm
+##   nginx.ingress.kubernetes.io/limit-burst-multiplier
+##   nginx.ingress.kubernetes.io/limit-rate-after
+##   nginx.ingress.kubernetes.io/limit-rate
+##   nginx.ingress.kubernetes.io/limit-whitelist
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ingress-nginx-rate-limit-inputs
+  labels:
+    sas.com/admin: none
+data:
+  # limitConnections: "{{ CONNECTION_LIMIT }}"
+  # limitRps: "{{ REQUESTS_PER_SECOND_LIMIT }}"
+  # limitRpm: "{{ REQUESTS_PER_MINUTE_LIMIT }}"
+  # limitBurstMultiplier: "{{ LIMIT_BURST_MULTIPLIER }}"
+  # limitRateAfter: "{{ LIMIT_AFTER_BANDWIDTH }}"
+  # limitRate: "{{ BANDWIDTH_LIMIT }}"
+  # limitWhitelist: "{{ LIMIT_WHITELIST_CIDRS }}"

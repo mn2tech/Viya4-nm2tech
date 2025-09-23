@@ -1,0 +1,26 @@
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: add-env-variables-to-esp-projects
+patch: |-
+#  - op: add
+#    path: /spec/projectTemplate/deployment/spec/template/spec/containers/0/env/-
+#    value:
+#      name: DFESP_QKB
+#      value: {{ DFESP-QKB }}
+#  - op: add
+#    path: /spec/projectTemplate/deployment/spec/template/spec/containers/0/env/-
+#    value:
+#      name: DFESP_QKB_LIC
+#      value: {{ DFESP-QKB-LICENSE }}
+#  - op: add
+#    path: /spec/projectTemplate/deployment/spec/template/spec/containers/0/env/-
+#    value:
+#      name: LD_LIBRARY_PATH
+#      value: {{ LD-LIBRARY-PATH }}
+target:
+  group: iot.sas.com
+  kind: ESPConfig
+  name: sas-esp-operator
+  version: v1

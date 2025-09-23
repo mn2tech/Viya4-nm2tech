@@ -1,0 +1,9 @@
+apiVersion: builtin
+kind: ConfigMapGenerator
+metadata:
+  name: add-imagepullsecret-configuration
+options:
+  annotations:
+    config.kubernetes.io/local-config: "true"
+literals:
+  - secret-name=placeholder

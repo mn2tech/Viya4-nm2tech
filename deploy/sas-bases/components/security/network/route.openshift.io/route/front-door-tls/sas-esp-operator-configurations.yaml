@@ -1,0 +1,9 @@
+---
+nameReference:
+- kind: Secret
+  version: v1
+  fieldSpecs:
+  - path: spec/projectTemplate/route/metadata/annotations/cert-utils-operator.redhat-cop.io\/certs-from-secret
+    kind: ESPConfig
+  - path: spec/projectTemplate/route/metadata/annotations/cert-utils-operator.redhat-cop.io\/destinationCA-from-secret
+    kind: ESPConfig

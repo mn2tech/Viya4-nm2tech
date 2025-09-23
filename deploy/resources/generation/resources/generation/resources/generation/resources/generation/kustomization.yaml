@@ -1,0 +1,36 @@
+components:
+- sas-bases/components/crunchydata/internal-platform-postgres
+- sas-bases/components/security/core/base/full-stack-tls
+- sas-bases/components/security/network/networking.k8s.io/ingress/nginx.ingress.kubernetes.io/full-stack-tls
+configMapGenerator:
+- behavior: merge
+  literals:
+  - INGRESS_HOST=a010597ba0a7d4b7e8b7cb6572ae6820-1994512981.us-east-1.elb.amazonaws.com
+  name: ingress-input
+- behavior: merge
+  literals:
+  - SAS_SERVICES_URL=https://a010597ba0a7d4b7e8b7cb6572ae6820-1994512981.us-east-1.elb.amazonaws.com:443
+  name: sas-shared-config
+configurations:
+- sas-bases/overlays/required/kustomizeconfig.yaml
+namespace: default
+patches:
+- path: site-config/storageclass.yaml
+  target:
+    annotationSelector: sas.com/component-name in (sas-backup-job,sas-data-quality-services,sas-commonfiles,sas-cas-operator,sas-pyconfig,sas-risk-cirrus-search,sas-risk-modeling-core,sas-event-stream-processing-studio-app)
+    kind: PersistentVolumeClaim
+resources:
+- sas-bases/base
+- sas-bases/overlays/network/networking.k8s.io
+- site-config/security/openssl-generated-ingress-certificate.yaml
+- sas-bases/overlays/cas-server
+- sas-bases/overlays/crunchydata/postgres-operator
+- sas-bases/overlays/postgres/platform-postgres
+- sas-bases/overlays/internal-elasticsearch
+- sas-bases/overlays/update-checker
+- sas-bases/overlays/cas-server/auto-resources
+transformers:
+- sas-bases/overlays/internal-elasticsearch/sysctl-transformer.yaml
+- sas-bases/overlays/required/transformers.yaml
+- sas-bases/overlays/cas-server/auto-resources/remove-resources.yaml
+- sas-bases/overlays/internal-elasticsearch/internal-elasticsearch-transformer.yaml

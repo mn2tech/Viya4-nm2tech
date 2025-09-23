@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" type="text/css" href="sas.css"/>
+        <title>Configuring General Ingress Options</title>
+    </head>
+    <body>
+        <h1 id="140053167366048configuring-general-ingress-options">Configuring General Ingress Options</h1>
+<h2 id="140053167366048overview">Overview</h2>
+<p>You can use the examples found within <code>$deploy/sas-bases/examples/ingress-configuration/</code> to set general configuration values for Ingress resources.</p>
+<p>The INGRESS_CLASS_NAME specifies the name of the IngressClass which SAS Viya Platform Ingress resources should use for this deployment. By default, SAS Viya Platform Ingress resources will use the <code>nginx</code> IngressClass. For more information about IngressClass resources, see <a href="https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-class">Ingress class</a> and <a href="https://kubernetes.github.io/ingress-nginx/user-guide/multiple-ingress/#using-ingressclasses">Using IngressClasses</a>.</p>
+<p>The corresponding transformer file to override the ingressClassName field in Ingress resources is found at <code>sas-bases/overlays/ingress-configuration/update-ingress-classname.yaml</code>.</p>
+<h2 id="140053167366048installation">Installation</h2>
+<p>Use these steps to apply the desired properties to your SAS Viya platform deployment.</p>
+<ol>
+<li>
+<p>Copy the <code>$deploy/sas-bases/examples/ingress-configuration/ingress-configuration-inputs.yaml</code> file to the location of your working container security overlay,
+   such as <code>site-config/ingress-configuration/</code>.</p>
+</li>
+<li>
+<p>Define the properties in the ingress-configuration-inputs.yaml file which match the desired configuration. To define a property, uncomment it and update its token value as described in the comments in the file.</p>
+</li>
+<li>
+<p>Add the relative path of ingress-configuration-inputs.yaml to the resources block of the base kustomization.yaml file (<code>$deploy/kustomization.yaml</code>). Here is an example:</p>
+<pre class="highlight"><code class="language-yaml">...
+resources:
+...
+- site-config/ingress-configuration/ingress-configuration-inputs.yaml
+...</code></pre>
+
+</li>
+<li>
+<p>Add the relative path(s) of the corresponding transformer file(s) to the transformers block of the base kustomization.yaml file. There should be one transformer file added per option defined within the ConfigMap. Here is an example:</p>
+<pre class="highlight"><code class="language-yaml">...
+transformers:
+...
+- sas-bases/overlays/ingress-configuration/update-ingress-classname.yaml
+...</code></pre>
+
+</li>
+</ol>
+    </body>
+</html>

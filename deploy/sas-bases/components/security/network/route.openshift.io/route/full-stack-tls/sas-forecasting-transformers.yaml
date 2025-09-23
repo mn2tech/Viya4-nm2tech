@@ -1,0 +1,450 @@
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-forecasting-comparison-route-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/tls
+    value:
+      termination: reencrypt
+      insecureEdgeTerminationPolicy: Redirect
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1certs-from-secret
+    value: sas-ingress-certificate
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1destinationCA-from-secret
+    value: sas-viya-ca-certificate-secret
+target:
+  kind: Route
+  group: route.openshift.io
+  version: v1
+  name: sas-forecasting-comparison
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-forecasting-comparison-multitenant-route-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/tls
+    value:
+      termination: reencrypt
+      insecureEdgeTerminationPolicy: Redirect
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1certs-from-secret
+    value: sas-ingress-certificate
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1destinationCA-from-secret
+    value: sas-viya-ca-certificate-secret
+target:
+  kind: Route
+  group: route.openshift.io
+  version: v1
+  name: sas-forecasting-comparison-multitenant
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-forecasting-data-definition-route-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/tls
+    value:
+      termination: reencrypt
+      insecureEdgeTerminationPolicy: Redirect
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1certs-from-secret
+    value: sas-ingress-certificate
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1destinationCA-from-secret
+    value: sas-viya-ca-certificate-secret
+target:
+  kind: Route
+  group: route.openshift.io
+  version: v1
+  name: sas-forecasting-data-definition
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-forecasting-data-definition-multitenant-route-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/tls
+    value:
+      termination: reencrypt
+      insecureEdgeTerminationPolicy: Redirect
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1certs-from-secret
+    value: sas-ingress-certificate
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1destinationCA-from-secret
+    value: sas-viya-ca-certificate-secret
+target:
+  kind: Route
+  group: route.openshift.io
+  version: v1
+  name: sas-forecasting-data-definition-multitenant
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-forecasting-events-route-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/tls
+    value:
+      termination: reencrypt
+      insecureEdgeTerminationPolicy: Redirect
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1certs-from-secret
+    value: sas-ingress-certificate
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1destinationCA-from-secret
+    value: sas-viya-ca-certificate-secret
+target:
+  kind: Route
+  group: route.openshift.io
+  version: v1
+  name: sas-forecasting-events
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-forecasting-events-multitenant-route-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/tls
+    value:
+      termination: reencrypt
+      insecureEdgeTerminationPolicy: Redirect
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1certs-from-secret
+    value: sas-ingress-certificate
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1destinationCA-from-secret
+    value: sas-viya-ca-certificate-secret
+target:
+  kind: Route
+  group: route.openshift.io
+  version: v1
+  name: sas-forecasting-events-multitenant
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-forecasting-exploration-route-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/tls
+    value:
+      termination: reencrypt
+      insecureEdgeTerminationPolicy: Redirect
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1certs-from-secret
+    value: sas-ingress-certificate
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1destinationCA-from-secret
+    value: sas-viya-ca-certificate-secret
+target:
+  kind: Route
+  group: route.openshift.io
+  version: v1
+  name: sas-forecasting-exploration
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-forecasting-exploration-multitenant-route-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/tls
+    value:
+      termination: reencrypt
+      insecureEdgeTerminationPolicy: Redirect
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1certs-from-secret
+    value: sas-ingress-certificate
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1destinationCA-from-secret
+    value: sas-viya-ca-certificate-secret
+target:
+  kind: Route
+  group: route.openshift.io
+  version: v1
+  name: sas-forecasting-exploration-multitenant
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-forecasting-filters-route-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/tls
+    value:
+      termination: reencrypt
+      insecureEdgeTerminationPolicy: Redirect
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1certs-from-secret
+    value: sas-ingress-certificate
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1destinationCA-from-secret
+    value: sas-viya-ca-certificate-secret
+target:
+  kind: Route
+  group: route.openshift.io
+  version: v1
+  name: sas-forecasting-filters
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-forecasting-filters-multitenant-route-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/tls
+    value:
+      termination: reencrypt
+      insecureEdgeTerminationPolicy: Redirect
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1certs-from-secret
+    value: sas-ingress-certificate
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1destinationCA-from-secret
+    value: sas-viya-ca-certificate-secret
+target:
+  kind: Route
+  group: route.openshift.io
+  version: v1
+  name: sas-forecasting-filters-multitenant
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-forecasting-gateway-route-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/tls
+    value:
+      termination: reencrypt
+      insecureEdgeTerminationPolicy: Redirect
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1certs-from-secret
+    value: sas-ingress-certificate
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1destinationCA-from-secret
+    value: sas-viya-ca-certificate-secret
+target:
+  kind: Route
+  group: route.openshift.io
+  version: v1
+  name: sas-forecasting-gateway
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-forecasting-gateway-multitenant-route-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/tls
+    value:
+      termination: reencrypt
+      insecureEdgeTerminationPolicy: Redirect
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1certs-from-secret
+    value: sas-ingress-certificate
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1destinationCA-from-secret
+    value: sas-viya-ca-certificate-secret
+target:
+  kind: Route
+  group: route.openshift.io
+  version: v1
+  name: sas-forecasting-gateway-multitenant
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-forecasting-models-route-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/tls
+    value:
+      termination: reencrypt
+      insecureEdgeTerminationPolicy: Redirect
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1certs-from-secret
+    value: sas-ingress-certificate
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1destinationCA-from-secret
+    value: sas-viya-ca-certificate-secret
+target:
+  kind: Route
+  group: route.openshift.io
+  version: v1
+  name: sas-forecasting-models
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-forecasting-models-multitenant-route-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/tls
+    value:
+      termination: reencrypt
+      insecureEdgeTerminationPolicy: Redirect
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1certs-from-secret
+    value: sas-ingress-certificate
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1destinationCA-from-secret
+    value: sas-viya-ca-certificate-secret
+target:
+  kind: Route
+  group: route.openshift.io
+  version: v1
+  name: sas-forecasting-models-multitenant
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-forecasting-overrides-route-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/tls
+    value:
+      termination: reencrypt
+      insecureEdgeTerminationPolicy: Redirect
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1certs-from-secret
+    value: sas-ingress-certificate
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1destinationCA-from-secret
+    value: sas-viya-ca-certificate-secret
+target:
+  kind: Route
+  group: route.openshift.io
+  version: v1
+  name: sas-forecasting-overrides
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-forecasting-overrides-multitenant-route-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/tls
+    value:
+      termination: reencrypt
+      insecureEdgeTerminationPolicy: Redirect
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1certs-from-secret
+    value: sas-ingress-certificate
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1destinationCA-from-secret
+    value: sas-viya-ca-certificate-secret
+target:
+  kind: Route
+  group: route.openshift.io
+  version: v1
+  name: sas-forecasting-overrides-multitenant
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-forecasting-pipelines-route-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/tls
+    value:
+      termination: reencrypt
+      insecureEdgeTerminationPolicy: Redirect
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1certs-from-secret
+    value: sas-ingress-certificate
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1destinationCA-from-secret
+    value: sas-viya-ca-certificate-secret
+target:
+  kind: Route
+  group: route.openshift.io
+  version: v1
+  name: sas-forecasting-pipelines
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-forecasting-pipelines-multitenant-route-full-stack-tls-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1tls-mode
+    value: full-stack
+  - op: replace
+    path: /spec/tls
+    value:
+      termination: reencrypt
+      insecureEdgeTerminationPolicy: Redirect
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1certs-from-secret
+    value: sas-ingress-certificate
+  - op: add
+    path: /metadata/annotations/cert-utils-operator.redhat-cop.io~1destinationCA-from-secret
+    value: sas-viya-ca-certificate-secret
+target:
+  kind: Route
+  group: route.openshift.io
+  version: v1
+  name: sas-forecasting-pipelines-multitenant

@@ -1,0 +1,34 @@
+---
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  annotations:
+    sas.com/kustomize-base: base
+  labels:
+    app.kubernetes.io/name: sas-landing-app
+    sas.com/admin: namespace
+  name: sas-landing-app
+spec:
+  routes:
+  - conditions:
+    - prefix: /SASLanding
+    loadBalancerPolicy:
+      strategy: Cookie
+    pathRewritePolicy:
+      replacePrefix:
+      - replacement: /SASLanding/
+    services:
+    - name: sas-landing-app
+      port: 80
+    timeoutPolicy:
+      response: 300s
+  - conditions:
+    - prefix: /SASLanding/
+    loadBalancerPolicy:
+      strategy: Cookie
+    services:
+    - name: sas-landing-app
+      port: 80
+    timeoutPolicy:
+      response: 300s
+

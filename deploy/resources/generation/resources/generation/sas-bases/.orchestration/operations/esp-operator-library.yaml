@@ -1,0 +1,100 @@
+apiVersion: orchestration.sas.com/v3beta6
+kind: LifecycleOperation
+metadata:
+  annotations:
+    sas.com/component-name: sas-esp-operator
+    sas.com/component-version: 10.744.7-20250409.1744212216776
+  creationTimestamp: null
+  name: esp-operator-library
+spec:
+  source: |-
+    package sasespop
+    import (
+      "encoding/yaml"
+      "fmt"
+      saslc "sas/orchestration/lifecycle"
+      saslccluster "sas/orchestration/lifecycle/cluster"
+    )
+    func ESPConfig() *saslc.Resource {
+      resources, err := saslccluster.Resources(
+        saslccluster.Namespace(saslc.Arg("namespace")),
+        saslccluster.Group("iot.sas.com"),
+        saslccluster.Resource("espconfigs"),
+      )
+      if err != nil {
+        saslc.Fail(err.Error())
+        return nil
+      }
+      filteredResources := nonNilResources(resources)
+      if len(filteredResources) == 0 {
+        saslc.Fail("failed to find any iot.sas.com espconfigs resources")
+        return nil
+      }
+      if len(filteredResources) > 1 {
+        saslc.Fail("found more than one iot.sas.com espconfigs resources")
+        return nil
+      }
+      result := filteredResources[0]
+      name, _ := result.F("metadata").F("name").Value().(string)
+      phase, _ := result.F("status").F("phase").Value().(string)
+      saslc.Log(fmt.Sprintf("Found '%s' iot.sas.com espconfig resource with '%s' status phase.", name, phase))
+      return result
+    }
+    func ESPConfigCanPause() bool {
+      espConfig := ESPConfig()
+      if espConfig == nil {
+        return true
+      }
+      propValue, _ := espConfig.F("spec").F("operatorProperties").F("feature.pause").Value().(string)
+      switch propValue {
+        case "", "true":
+          return true
+        default:
+          return false
+      }
+    }
+    func nonNilResources(resources []*saslc.Resource) []*saslc.Resource {
+      result := make([]*saslc.Resource, 0, len(resources))
+      for idx := range resources {
+        resource := resources[idx]
+        if resource == nil || resource.Value() == nil {
+          continue
+        }
+        result = append(result, resource)
+      }
+      return result
+    }
+    func StartAll() {
+      argTimeout := saslc.Arg("timeout")
+      if argTimeout == "" {
+        argTimeout = "5m"
+      }
+      if canPause := ESPConfigCanPause(); !canPause {
+        saslc.Log("Can not start all SAS Event Stream Processing (ESP) server custom resources; the ESP Operator pause feature is probably disabled.")
+        saslc.SetSucceeded()
+        return
+      }
+      _, err := saslc.Kubectl("label", "--all", "--overwrite", "espconfigs..iot.sas.com", "esp.iot.sas.com/pause=false")
+      if err != nil {
+        saslc.Fail(err.Error())
+        return
+      }
+      saslc.SetSucceeded()
+    }
+    func StopAll() {
+      argTimeout := saslc.Arg("timeout")
+      if argTimeout == "" {
+        argTimeout = "5m"
+      }
+      if canPause := ESPConfigCanPause(); !canPause {
+        saslc.Log("Can not stop all SAS Event Stream Processing (ESP) server custom resources; the ESP Operator pause feature is probably disabled.")
+        saslc.SetSucceeded()
+        return
+      }
+      _, err := saslc.Kubectl("label", "--all", "--overwrite", "espconfigs..iot.sas.com", "esp.iot.sas.com/pause=true")
+      if err != nil {
+        saslc.Fail(err.Error())
+        return
+      }
+      saslc.SetSucceeded()
+    }

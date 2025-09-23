@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" type="text/css" href="sas.css"/>
+        <title>Change Alternate Data Storage for SAS Viya Platform Files Service</title>
+    </head>
+    <body>
+        <h1 id="140053166487392change-alternate-data-storage-for-sas-viya-platform-files-service">Change Alternate Data Storage for SAS Viya Platform Files Service</h1>
+<h2 id="140053166487392overview">Overview</h2>
+<p>The SAS Viya platform files service uses PostgreSQL to store file metadata and content. However, In PostgreSQL upload time is slower for large objects. To overcome this limitation you can choose to store the file content in other data storage, such as Azure Blob Storage.
+If you choose Azure Blob Storage as the storage database, then the file content is stored in Azure Blob Storage and file metadata remains in PostgreSQL.</p>
+<h2 id="140053166487392configure-sas-viya-file-service-for-azure-blob-storage">Configure SAS Viya File Service for Azure Blob Storage</h2>
+<p>The steps necessary to configure the SAS Viya platform files service to use Azure Blob Storage
+as the back end for file content are listed below.</p>
+<h3 id="140053166487392prerequisites">Prerequisites</h3>
+<p>Before you start, create or obtain a storage account and record the name of the storage account and its access key.</p>
+<h3 id="140053166487392installation">Installation</h3>
+<ol>
+<li>
+<p>Copy the files in the <code>$deploy/sas-bases/examples/sas-files/azure/blob</code> directory to the
+<code>$deploy/site-config/sas-files/azure/blob</code> directory. Create the target directory if it does
+not already exist.</p>
+</li>
+<li>
+<p>Create a file named <code>account_key</code> in the <code>$deploy/site-config/sas-files/azure/blob</code>
+directory, and paste the storage account key into the file. The file should
+only contain the storage account key.</p>
+</li>
+<li>
+<p>In the <code>$deploy/site-config/sas-files/azure/blob/configmaps.yaml</code> file, replace
+<code>{{ STORAGE-ACCOUNT-NAME }}</code> with the name of the storage account to be used by
+the files service.</p>
+</li>
+<li>
+<p>Make the following changes to the base kustomization.yaml file in the <code>$deploy</code>
+directory.</p>
+<p>4.1. Add <code>sas-bases/overlays/sas-files</code> and <code>site-config/azure/blob</code> to the resources block.
+ Here is an example:</p>
+<pre class="highlight"><code class="language-yaml">resources:
+...
+- sas-bases/overlays/sas-files
+- site-config/sas-files/azure/blob
+...</code></pre>
+
+<p>4.2. Add <code>site-config/azure/blob/transformers.yaml</code> and <code>sas-bases/overlays/sas-files/file-custom-db-transformer.yaml</code> to the transformers block.
+ Here is an example:</p>
+<pre class="highlight"><code class="language-yaml">transformers:
+...
+- sas-bases/overlays/sas-files/file-custom-db-transformer.yaml
+- site-config/sas-files/azure/blob/transformers.yaml
+...</code></pre>
+
+</li>
+<li>
+<p>Use the deployment commands described in <a href="http://documentation.sas.com/?cdcId=itopscdc&amp;cdcVersion=default&amp;docsetId=dplyml0phy0dkr&amp;docsetTarget=titlepage.htm">SAS Viya Platform Deployment Guide</a> to apply the new settings.</p>
+</li>
+</ol>
+    </body>
+</html>

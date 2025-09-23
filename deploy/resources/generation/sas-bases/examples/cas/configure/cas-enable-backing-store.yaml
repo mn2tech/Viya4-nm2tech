@@ -1,0 +1,38 @@
+# This patch transformer enables a backing store for dynamic memory allocations 
+# across all CAS processes.
+#
+# Choose the size of each individual backing store before deployment.
+# The total size should not exceed 80% of the total memory on the nodes
+# that support CAS pods.
+#
+# The MEMORY_SIZE value is a numeric value followed by the units,
+# such as 32Gi for 32 gigabytes. In Kubernetes, the units for gigabytes is Gi and
+# is case-sensitive.
+#
+# Replace this value with a size that is appropriate for the Kubernetes
+# nodes that will support CAS pods
+#
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: cas-enable-backing-store
+patch: |-
+   - op: add
+     path: /spec/useMemoryBackingStore
+     value: true
+   - op: add
+     path: /spec/memoryBackingStoreSize
+     value: {{ MEMORY_SIZE }}
+target:
+  group: viya.sas.com
+  kind: CASDeployment
+  # The following name specification targets all CAS servers. To target specific
+  # CAS servers, comment out the following line then uncomment and edit one of the lines
+  # targeting specific CAS servers.
+  name: .*
+  # Uncomment this to apply to one particular named CAS server:
+  #name: {{ NAME-OF-SERVER }}
+  # Uncomment this to apply to the default CAS server:
+  #labelSelector: "sas.com/cas-server-default"
+  version: v1alpha1

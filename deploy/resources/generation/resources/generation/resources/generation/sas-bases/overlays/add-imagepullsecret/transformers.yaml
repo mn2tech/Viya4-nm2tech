@@ -1,0 +1,280 @@
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: prime-deployment-v1-for-imagepullsecret
+patch: |-
+  - op: add
+    path: /spec/template/spec/imagePullSecrets/0
+    value:
+      name: placeholder
+target:
+  group: apps
+  kind: Deployment
+  name: .*
+  version: v1
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: prime-cronjob-v1beta1-for-imagepullsecret
+patch: |-
+  - op: add
+    path: /spec/jobTemplate/spec/template/spec/imagePullSecrets/0
+    value:
+      name: placeholder
+target:
+  group: batch
+  kind: CronJob
+  name: .*
+  version: v1beta1
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: prime-cronjob-v1-for-imagepullsecret
+patch: |-
+  - op: add
+    path: /spec/jobTemplate/spec/template/spec/imagePullSecrets/0
+    value:
+      name: placeholder
+target:
+  group: batch
+  kind: CronJob
+  name: .*
+  version: v1
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: prime-daemonset-v1-for-imagepullsecret
+patch: |-
+  - op: add
+    path: /spec/template/spec/imagePullSecrets/0
+    value:
+      name: placeholder
+target:
+  group: apps
+  kind: DaemonSet
+  name: .*
+  version: v1
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: prime-job-v1-for-imagepullsecret
+patch: |-
+  - op: add
+    path: /spec/template/spec/imagePullSecrets/0
+    value:
+      name: placeholder
+target:
+  group: batch
+  kind: Job
+  name: .*
+  version: v1
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: prime-statefulset-v1-for-imagepullsecret
+patch: |-
+  - op: add
+    path: /spec/template/spec/imagePullSecrets/0
+    value:
+      name: placeholder
+target:
+  group: apps
+  kind: StatefulSet
+  name: .*
+  version: v1
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: prime-podtemplate-v1-for-imagepullsecret
+patch: |-
+  - op: add
+    path: /template/spec/imagePullSecrets/0
+    value:
+      name: placeholder
+target:
+  kind: PodTemplate
+  name: .*
+  version: v1
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: prime-casdeployment-v1alpha1-for-imagepullsecret
+patch: |-
+  - op: add
+    path: /spec/controllerTemplate/spec/imagePullSecrets/0
+    value:
+      name: placeholder
+target:
+  kind: CASDeployment
+  name: .*
+  version: v1alpha1
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: prime-opendistrocluster-v1alpha1-for-imagepullsecret
+patch: |-
+  - op: add
+    path: /spec/template/spec/imagePullSecrets/0
+    value:
+      name: placeholder
+target:
+  kind: OpenDistroCluster
+  name: .*
+  version: v1alpha1
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: prime-pgupgrade-v1beta1-for-imagepullsecret
+patch: |-
+  - op: add
+    path: /spec/imagePullSecrets/0
+    value:
+      name: placeholder
+target:
+  kind: PGUpgrade
+  name: .*
+  version: v1beta1
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: prime-postgrescluster-v1beta1-for-imagepullsecret
+patch: |-
+  - op: add
+    path: /spec/imagePullSecrets/0
+    value:
+      name: placeholder
+target:
+  kind: PostgresCluster
+  name: .*
+  version: v1beta1
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: prime-espconfig-v1-for-imagepullsecret
+patch: |-
+  - op: add
+    path: /spec/loadBalancerTemplate/deployment/spec/template/spec/imagePullSecrets/0
+    value:
+      name: placeholder
+  - op: add
+    path: /spec/projectTemplate/deployment/spec/template/spec/imagePullSecrets/0
+    value:
+      name: placeholder
+  - op: add
+    path: /spec/routerTemplate/deployment/spec/template/spec/imagePullSecrets/0
+    value:
+      name: placeholder
+target:
+  kind: ESPConfig
+  name: .*
+  version: v1
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: prime-prepull-serviceaccount-v1-for-imagepullsecret
+patch: |-
+  - op: add
+    path: /imagePullSecrets/0
+    value:
+      name: placeholder
+target:
+  kind: ServiceAccount
+  name: sas-prepull
+  version: v1
+---
+apiVersion: builtin
+kind: ReplacementTransformer
+metadata:
+  name: apply-add-imagepullsecret
+replacements:
+- source:
+    kind: ConfigMap
+    name: add-imagepullsecret-configuration
+    fieldPath: data.secret-name
+  targets:
+  - select:
+      group: apps
+      kind: Deployment
+      version: v1
+    fieldPaths:
+    - spec.template.spec.imagePullSecrets.0.name
+  - select:
+      group: batch
+      kind: CronJob
+      version: v1
+    fieldPaths:
+    - spec.jobTemplate.spec.template.spec.imagePullSecrets.0.name
+  - select:
+      group: batch
+      kind: CronJob
+      version: v1beta1
+    fieldPaths:
+    - spec.jobTemplate.spec.template.spec.imagePullSecrets.0.name
+  - select:
+      group: apps
+      kind: DaemonSet
+      version: v1
+    fieldPaths:
+    - spec.template.spec.imagePullSecrets.0.name
+  - select:
+      group: batch
+      kind: Job
+      version: v1
+    fieldPaths:
+    - spec.template.spec.imagePullSecrets.0.name
+  - select:
+      group: apps
+      kind: StatefulSet
+      version: v1
+    fieldPaths:
+    - spec.template.spec.imagePullSecrets.0.name
+  - select:
+      kind: PodTemplate
+      version: v1
+    fieldPaths:
+    - template.spec.imagePullSecrets.0.name
+  - select:
+      kind: CASDeployment
+      version: v1alpha1
+    fieldPaths:
+    - spec.controllerTemplate.spec.imagePullSecrets.0.name
+  - select:
+      kind: OpenDistroCluster
+      version: v1alpha1
+    fieldPaths:
+    - spec.template.spec.imagePullSecrets.0.name
+  - select:
+      kind: PGUpgrade
+      version: v1beta1
+    fieldPaths:
+    - spec.imagePullSecrets.0.name
+  - select:
+      kind: PostgresCluster
+      version: v1beta1
+    fieldPaths:
+    - spec.imagePullSecrets.0.name
+  - select:
+      kind: ESPConfig
+      version: v1
+    fieldPaths:
+    - spec.loadBalancerTemplate.deployment.spec.template.spec.imagePullSecrets.0.name
+    - spec.projectTemplate.deployment.spec.template.spec.imagePullSecrets.0.name
+    - spec.routerTemplate.deployment.spec.template.spec.imagePullSecrets.0.name
+  - select:
+      kind: ServiceAccount
+      version: v1
+      name: sas-prepull
+    fieldPaths:
+    - imagePullSecrets.0.name

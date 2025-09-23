@@ -1,0 +1,17 @@
+---
+apiVersion: builtin
+kind: ReplacementTransformer
+metadata:
+  name: update-limitBurstMultiplier-annotation-ingress-transformer
+replacements:
+- source:
+    kind: ConfigMap
+    name: ingress-nginx-rate-limit-inputs
+    fieldPath: data.limitBurstMultiplier
+  targets:
+  - select:
+      kind: Ingress
+    fieldPaths:
+      - metadata.annotations.nginx\.ingress\.kubernetes\.io/limit-burst-multiplier
+    options:
+      create: true
