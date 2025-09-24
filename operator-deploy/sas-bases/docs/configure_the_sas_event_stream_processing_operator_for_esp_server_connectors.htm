@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" type="text/css" href="sas.css"/>
+        <title>Configure the SAS Event Stream Processing Operator for ESP Server Connectors</title>
+    </head>
+    <body>
+        <h1 id="140228096767744configure-the-sas-event-stream-processing-operator-for-esp-server-connectors">Configure the SAS Event Stream Processing Operator for ESP Server Connectors</h1>
+<h2 id="140228096767744overview">Overview</h2>
+<p>The <code>$deploy/sas-bases/examples/sas-esp-operator/esp-server-connectors-config</code> directory contains files to configure the SAS Event Stream Processing Kubernetes Operator to include SAS Event Stream Processing connectors configuration.
+For information, see <a href="https://documentation.sas.com/?cdcId=espcdc&amp;cdcVersion=default&amp;docsetId=espca&amp;docsetTarget=p1nhdjrc9n0nnmn1fxqnyc0nihzz.htm">Overview to Connectors</a>.</p>
+<h2 id="140228096767744examples">Examples</h2>
+<p>The example files provided assume the following:</p>
+<ul>
+<li><code>$deploy</code> refers to the directory that contains the deployment assets.</li>
+<li>The deployment assets for the order have been downloaded to the <code>$deploy</code> directory.</li>
+<li>The <code>$deploy</code> directory is the current directory.</li>
+</ul>
+<h2 id="140228096767744installation">Installation</h2>
+<ol>
+<li>
+<p>Create the <code>$deploy/sas-config/esp-server-connectors-config</code> directory. Copy the content from the <code>$deploy/sas-bases/examples/sas-esp-operator/esp-server-connectors-config</code> directory to the <code>$deploy/site-config/esp-server-connectors-config</code> directory.</p>
+</li>
+<li>
+<p>The <code>$deploy/site-config/esp-server-connectors-config/secret.yaml</code> file contains a Kubernetes secret resource. The secret contains a value for the ESP Server <code>connectors.config</code> file content. The <code>connectors.config</code> value should be updated with SAS Event Stream Processing Server connector configuration parameters. For information, see <a href="https://documentation.sas.com/?docsetId=espca&amp;docsetVersion=latest&amp;docsetTarget=p1nhdjrc9n0nnmn1fxqnyc0nihzz.htm#n0v6ulkamlaxgan1ov1frvu4dxsf">Setting Configuration Parameters in a Kubernetes Environment</a>.</p>
+</li>
+<li>
+<p>Make the following changes to the base kustomization.yaml file (<code>$deploy/kustomization.yaml</code>).</p>
+<ul>
+<li>Add <code>$deploy/site-config/esp-server-connectors-config/secret.yaml</code> to the resources block.</li>
+<li>Add <code>$deploy/site-config/esp-server-connectors-config/patchtransformer.yaml</code> to the transformers block.</li>
+</ul>
+<p>The references should look like this:</p>
+<pre class="highlight"><code class="language-yaml">...
+resources:
+...
+- site-config/esp-server-connectors-config/secret.yaml
+...
+transformers:
+...
+- site-config/esp-server-connectors-config/patchtransformer.yaml
+...</code></pre>
+
+</li>
+<li>
+<p>After you modify the <code>$deploy/kustomization.yaml</code> file, deploy the software using the commands described in <a href="https://documentation.sas.com/?cdcId=itopscdc&amp;cdcVersion=default&amp;docsetId=dplyml0phy0dkr&amp;docsetTarget=p127f6y30iimr6n17x2xe9vlt54q.htm">Deploy the Software</a>.</p>
+</li>
+</ol>
+<h2 id="140228096767744additional-resources">Additional Resources</h2>
+<ul>
+<li>After your deployment is complete, see <a href="https://documentation.sas.com/?cdcId=espcdc&amp;cdcVersion=default&amp;docsetId=espstudio&amp;docsetTarget=titlepage.htm">SAS Event Stream Processing: Using SAS Event Stream Processing Studio</a> for information.</li>
+<li>To see an example SAS Event Stream Processing project, go to <code>$deploy/site-config/esp-server-connectors-config/project.xml</code>.</li>
+<li>For information about importing the project XML file into SAS Event Stream Processing Studio, see <a href="https://documentation.sas.com/?cdcId=espcdc&amp;cdcVersion=default&amp;docsetId=espstudio&amp;docsetTarget=n0qhr0p800gs68n18wbp96pu7txq.htm">Import a Project</a>.</li>
+<li>For information on running the imported project, see <a href="https://documentation.sas.com/?cdcId=espcdc&amp;cdcVersion=default&amp;docsetId=espstudio&amp;docsetTarget=p0dki3jqunilnmn16e4eutvcq0dy.htm">Testing Models in SAS Event Stream Processing Studio</a>.</li>
+</ul>
+    </body>
+</html>

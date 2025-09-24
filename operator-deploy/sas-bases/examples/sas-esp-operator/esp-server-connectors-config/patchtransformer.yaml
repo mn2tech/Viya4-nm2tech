@@ -1,0 +1,24 @@
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-esp-config-connectors-config
+patch: |
+  - op: add
+    path: /spec/projectTemplate/deployment/spec/template/spec/containers/0/volumeMounts/-
+    value:
+      mountPath: /opt/sas/viya/config/etc/SASEventStreamProcessingEngine/default/connectors.config
+      name: connectors-config
+      readOnly: true
+      subPath: connectors.config
+  - op: add
+    path: /spec/projectTemplate/deployment/spec/template/spec/volumes/-
+    value:
+      name: connectors-config
+      secret:
+        secretName: sas-esp-config-connectors-config
+target:
+  group: iot.sas.com
+  kind: ESPConfig
+  name: sas-esp-operator
+  version: v1

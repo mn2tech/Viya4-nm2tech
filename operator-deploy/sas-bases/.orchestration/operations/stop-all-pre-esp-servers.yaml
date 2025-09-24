@@ -1,0 +1,22 @@
+apiVersion: orchestration.sas.com/v3beta6
+kind: LifecycleOperation
+metadata:
+  annotations:
+    sas.com/component-name: sas-esp-operator
+    sas.com/component-version: 10.744.7-20250409.1744212216776
+  creationTimestamp: null
+  labels:
+    participate.lifecycle.sas.com/stop-all-pre: "true"
+  name: stop-all-pre-esp-servers
+spec:
+  args:
+  - name: namespace
+  - default: 5m
+    name: timeout
+  libraries:
+  - esp-operator-library
+  source: |-
+    package main
+    func main() {
+      sasespop.StopAll()
+    }

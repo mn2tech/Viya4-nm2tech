@@ -1,0 +1,27 @@
+---
+apiVersion: builtin
+kind: ReplacementTransformer
+metadata:
+  name: update-ingress-classname-transformer
+replacements:
+- source:
+    kind: ConfigMap
+    name: ingress-configuration-inputs
+    fieldPath: data.className
+  targets:
+  - select:
+      kind: Ingress
+    fieldPaths:
+      - spec.ingressClassName
+  - select:
+      group: viya.sas.com
+      kind: CASDeployment
+    fieldPaths:
+      - spec.ingressTemplate.spec.ingressClassName
+    options:
+      create: true
+  - select:
+      group: iot.sas.com
+      kind: ESPConfig
+    fieldPaths:
+      - spec.projectTemplate.ingress.spec.ingressClassName

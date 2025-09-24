@@ -1,0 +1,17 @@
+---
+apiVersion: builtin
+kind: ReplacementTransformer
+metadata:
+  name: update-limitRateAfter-annotation-ingress-transformer
+replacements:
+- source:
+    kind: ConfigMap
+    name: ingress-nginx-rate-limit-inputs
+    fieldPath: data.limitRateAfter
+  targets:
+  - select:
+      kind: Ingress
+    fieldPaths:
+      - metadata.annotations.nginx\.ingress\.kubernetes\.io/limit-rate-after
+    options:
+      create: true

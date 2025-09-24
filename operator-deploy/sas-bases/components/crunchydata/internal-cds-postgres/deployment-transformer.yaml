@@ -1,0 +1,20 @@
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: cds-postgres-deployment-transformer
+patch: |-
+  - op: add
+    path: /metadata/annotations/sas.com~1crunchy-cds-postgres
+    value: "true"
+  - op: add
+    path: /spec/template/spec/containers/0/resources
+    value:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+target:
+  kind: Deployment
+  name: pgo

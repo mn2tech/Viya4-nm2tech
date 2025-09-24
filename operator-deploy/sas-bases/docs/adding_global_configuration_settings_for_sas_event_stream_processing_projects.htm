@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" type="text/css" href="sas.css"/>
+        <title>Adding Global Configuration Settings for SAS Event Stream Processing Projects</title>
+    </head>
+    <body>
+        <h1 id="140228096949360adding-global-configuration-settings-for-sas-event-stream-processing-projects">Adding Global Configuration Settings for SAS Event Stream Processing Projects</h1>
+<h2 id="140228096949360overview">Overview</h2>
+<p>Use the <code>$deploy/sas-bases/examples/sas-esp-operator/espconfig/espconfig-properties.yaml</code> and <code>$deploy/sas-bases/examples/sas-esp-operator/espconfig/espconfig-env-variables.yaml</code> files to set default settings and environment variables for the SAS Event Stream Processing Kubernetes Operator and all SAS Event Stream Processing servers that start within a Kubernetes environment.</p>
+<p>Each default setting and environment variable that is described in these example files represents optional settings that enable you to change the default settings and environment variables.
+If no configuration changes are required, do not add these example files to your <code>kustomization.yaml</code> file.</p>
+<h2 id="140228096949360prerequisites">Prerequisites</h2>
+<p>By default, each default setting or environment variable in the example files is commented out.
+Start by determining which of the commented settings or environment variables you intend to set.
+The following list describes the settings and environment variables that can be added and provides information about how to set them.</p>
+<ul>
+<li>
+<p><code>espconfig-properties.yaml</code>:</p>
+<ul>
+<li>
+<p>Determine the <code>server.disableTrace</code> value.</p>
+<ul>
+<li>Use <code>"true"</code> to avoid log injection.</li>
+<li>For more information, refer to the SAS Event Stream Processing documentation for <a href="https://documentation.sas.com/?cdcId=espcdc&amp;cdcVersion=default&amp;docsetId=espxmllayer&amp;docsetTarget=p1r993p8bj4upxn1otx3e9ay5fcr.htm#p01zy1yfqm1w9qn167rxh2i2kegf">ESP Server Configuration Properties</a></li>
+</ul>
+</li>
+<li>
+<p>Determine the <code>server.mas-threads</code> value.</p>
+<ul>
+<li>This is the number of SAS Micro Analytic Service threads that should be used across all CPUs.</li>
+<li>Use <code>"0"</code> for one thread per CPU.</li>
+<li>For more information, refer to the SAS Event Stream Processing documentation for <a href="https://documentation.sas.com/?cdcId=espcdc&amp;cdcVersion=default&amp;docsetId=espxmllayer&amp;docsetTarget=p1r993p8bj4upxn1otx3e9ay5fcr.htm#p01zy1yfqm1w9qn167rxh2i2kegf">ESP Server Configuration Properties</a></li>
+</ul>
+</li>
+<li>
+<p>Determine the <code>server.store-location</code> value.</p>
+<ul>
+<li>This is the absolute path to the directory of SAS Micro Analytic Service stores.</li>
+<li>This location must be available through a persistent volume.</li>
+<li>For more information, refer to the SAS Event Stream Processing documentation for <a href="https://documentation.sas.com/?cdcId=espcdc&amp;cdcVersion=default&amp;docsetId=espxmllayer&amp;docsetTarget=p1r993p8bj4upxn1otx3e9ay5fcr.htm#p01zy1yfqm1w9qn167rxh2i2kegf">ESP Server Configuration Properties</a></li>
+</ul>
+</li>
+<li>
+<p>Determine the <code>server.loglevel</code> value.</p>
+<ul>
+<li>This is a comma-separated list of key-value pairs to specify the logging levels.</li>
+<li>You can set the logging level for individual SAS Event Stream Processing server contexts.
+  For example, <code>"DF.ESP=trace,DF.ESP.AUTH=info"</code>.</li>
+<li>For more information, refer to the SAS Event Stream Processing documentation for <a href="https://go.documentation.sas.com/?cdcId=espcdc&amp;cdcVersion=default&amp;docsetId=espts&amp;docsetTarget=n07870q147jx1gn1coobju0073gd.htm&amp;locale=en">Logging</a>.</li>
+</ul>
+</li>
+<li>
+<p>Determine the <code>server.trace</code> value.</p>
+<ul>
+<li>This is the trace format and may be one of the following: <code>XML</code>, <code>JSON</code>, or <code>CSV</code>.</li>
+<li>For more information, refer to the SAS Event Stream Processing documentation for <a href="https://documentation.sas.com/?cdcId=espcdc&amp;cdcVersion=default&amp;docsetId=espxmllayer&amp;docsetTarget=p1r993p8bj4upxn1otx3e9ay5fcr.htm#p01zy1yfqm1w9qn167rxh2i2kegf">ESP Server Configuration Properties</a></li>
+</ul>
+</li>
+<li>
+<p>Determine the <code>server.badevents</code> value.</p>
+<ul>
+<li>A bad event is one that cannot be processed because of a computational failure.</li>
+<li>This is the absolute path to the file to which bad events are written.</li>
+<li>This location must be available through a persistent volume.</li>
+<li>For more information, refer to the SAS Event Stream Processing documentation for <a href="https://documentation.sas.com/?cdcId=espcdc&amp;cdcVersion=default&amp;docsetId=espxmllayer&amp;docsetTarget=p1r993p8bj4upxn1otx3e9ay5fcr.htm#p01zy1yfqm1w9qn167rxh2i2kegf">ESP Server Configuration Properties</a></li>
+</ul>
+</li>
+<li>
+<p>Determine the <code>server.plugins</code> value.</p>
+<ul>
+<li>This is a comma-separated list of user-defined and dynamically loaded plug-ins (functions) to use.</li>
+<li>For more information, refer to the SAS Event Stream Processing documentation for <a href="https://documentation.sas.com/?cdcId=espcdc&amp;cdcVersion=default&amp;docsetId=espxmllayer&amp;docsetTarget=p1r993p8bj4upxn1otx3e9ay5fcr.htm#p01zy1yfqm1w9qn167rxh2i2kegf">ESP Server Configuration Properties</a></li>
+</ul>
+</li>
+<li>
+<p>Determine the <code>server.pluginsdir</code> value.</p>
+<ul>
+<li>This is the absolute path to the directory to search for user-defined and dynamically loaded plug-ins.</li>
+<li>This location must be available in a persistent volume.</li>
+<li>For more information, refer to the SAS Event Stream Processing documentation for <a href="https://documentation.sas.com/?cdcId=espcdc&amp;cdcVersion=default&amp;docsetId=espxmllayer&amp;docsetTarget=p1r993p8bj4upxn1otx3e9ay5fcr.htm#p01zy1yfqm1w9qn167rxh2i2kegf">ESP Server Configuration Properties</a></li>
+</ul>
+</li>
+<li>
+<p>Determine the maximum Kubernetes resource limits that may be allocated to all SAS Event Stream Processing server Kubernetes pod and horizontal pod autoscaling resources.</p>
+<ul>
+<li>Determine the <code>maxReplicas</code> value.<ul>
+<li>This is the maximum number of Kubernetes pods that may be allocated to a SAS Event Stream Processing server.</li>
+<li>For more information, refer to the Kubernetes documentation for <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#replicas">Deployment Replicas</a> and <a href="https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/#replicas">ReplicaSet Replicas</a>.</li>
+</ul>
+</li>
+<li>Determine the <code>maxMemory</code> value.<ul>
+<li>This is the maximum amount of memory resources that may be allocated to a SAS Event Stream Processing server.</li>
+<li>For more information, refer to the Kubernetes documentation for <a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory">Memory resource units</a>.</li>
+</ul>
+</li>
+<li>Determine the <code>maxCpu</code> value.<ul>
+<li>This is the maximum amount of CPU resources that may be allocated to a SAS Event Stream Processing server.</li>
+<li>For more information, refer to the Kubernetes documentation for <a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-cpu">CPU resource units</a>.</li>
+</ul>
+</li>
+<li>For more information, refer to the Kubernetes documentation for <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/">Deployments</a> and <a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/">Resource Management for Pods and Containers</a>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><code>espconfig-env-variables.yaml</code>:</p>
+<ul>
+<li>
+<p>The following environment variables are specified in the example:</p>
+<ul>
+<li><code>DFESP_QKB</code> - Determine the absolute path to the share directory under the SAS Data Quality installation.</li>
+<li><code>DFESP_QKB_LIC</code> - Determine the absolute path to the file of the SAS Data Quality license.</li>
+<li><code>LD_LIBRARY_PATH</code> - Determine paths to append to <code>LD_LIBRARY_PATH</code>.</li>
+</ul>
+</li>
+<li>
+<p>This example transformer enables you to leverage additional content that is located in a mounted path, such as <code>/mnt/path/to/file</code>.</p>
+</li>
+<li>
+<p>You can add any other environment variable that is not included in this file.</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="140228096949360installation">Installation</h2>
+<ol>
+<li>
+<p>Copy the example files from the <code>$deploy/sas-bases/examples/sas-esp-operator/espconfig</code> directory to the <code>$deploy/site-config/sas-esp-operator/espconfig</code> directory.
+   Create the destination directory if it does not exist.</p>
+</li>
+<li>
+<p>Use the <code>$deploy/site-config/sas-esp-operator/espconfig/espconfig-properties.yaml</code> file to specify custom SAS Event Stream Processing default settings.</p>
+<p>For each SAS Event Stream Processing default setting that you intend to use, uncomment the <code>op</code>, <code>path</code>, and <code>value</code> lines that are associated with the setting.
+ Then replace the <code>{{ VARIABLE-NAME }}</code> variable with the desired value.</p>
+<p>Here are some examples:</p>
+<pre class="highlight"><code class="language-yaml">...
+  - op: add
+    path: /spec/espProperties/server.disableTrace
+    value: "true"
+...
+  - op: add
+    path: /spec/espProperties/server.loglevel
+    value: esp=trace
+...
+  - op: replace
+    path: /spec/limits/maxReplicas
+    value: "2"
+...</code></pre>
+
+</li>
+<li>
+<p>Use the <code>$deploy/site-config/sas-esp-operator/espconfig/espconfig-env-variables.yaml</code> file to specify custom SAS Event Stream Processing default environment variables.</p>
+<p>For each SAS Event Stream Processing default environment variable that you intend to use, uncomment the <code>op</code>, <code>path</code>, <code>value</code>, <code>name</code>, and <code>value</code> lines that are associated with the environment variable.
+ Then replace the <code>{{ VARIABLE-NAME }}</code> variable with the desired value.</p>
+<p>If you would like to include additional environment variables that are not in the example file, add new sections for them after the provided examples.</p>
+<p>Here are some examples:</p>
+<pre class="highlight"><code class="language-yaml">...
+  - op: add
+    path: /spec/projectTemplate/deployment/spec/template/spec/containers/0/env/-
+    value:
+      name: DFESP_QKB_LIC
+      value: /mnt/data/sas/data/quality/license
+...
+  - op: add
+    path: /spec/projectTemplate/deployment/spec/template/spec/containers/0/env/-
+    value:
+      name: CUSTOM_ENV_VAR_NUMBER
+      value: "1234"
+  - op: add
+    path: /spec/projectTemplate/deployment/spec/template/spec/containers/0/env/-
+    value:
+      name: CUSTOM_ENV_VAR_FLAG
+      value: "true"
+...</code></pre>
+
+</li>
+<li>
+<p>Add <code>site-config/sas-esp-operator/espconfig/espconfig-properties.yaml</code> and/or <code>site-config/sas-esp-operator/espconfig/espconfig-env-variables.yaml</code> to the transformers block of the base <code>kustomization.yaml</code> file.</p>
+<p>Here is an example:</p>
+<pre class="highlight"><code class="language-yaml">...
+transformers:
+...
+- site-config/sas-esp-operator/espconfig/espconfig-properties.yaml
+- site-config/sas-esp-operator/espconfig/espconfig-env-variables.yaml
+...</code></pre>
+
+</li>
+</ol>
+<p>After the base <code>kustomization.yaml</code> file is modified, deploy the software using
+the commands that are described in <a href="http://documentation.sas.com/?cdcId=itopscdc&amp;cdcVersion=default&amp;docsetId=dplyml0phy0dkr&amp;docsetTarget=titlepage.htm">SAS Viya Platform: Deployment Guide</a>.</p>
+    </body>
+</html>

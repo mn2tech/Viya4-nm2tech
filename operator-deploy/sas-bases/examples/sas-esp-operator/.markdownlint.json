@@ -1,0 +1,10 @@
+{
+  "default": true,
+  "no-multiple-blanks": false,
+  "first-line-heading": false,
+  "line-length": {
+    "code_blocks": false,
+    "line_length": 1024,
+    "tables": false
+  }
+}

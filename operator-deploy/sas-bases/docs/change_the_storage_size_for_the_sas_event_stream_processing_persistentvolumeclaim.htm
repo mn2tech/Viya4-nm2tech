@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" type="text/css" href="sas.css"/>
+        <title>Change the Storage Size for the SAS Event Stream Processing PersistentVolumeClaim</title>
+    </head>
+    <body>
+        <h1 id="140228096710592change-the-storage-size-for-the-sas-event-stream-processing-persistentvolumeclaim">Change the Storage Size for the SAS Event Stream Processing PersistentVolumeClaim</h1>
+<h2 id="140228096710592overview">Overview</h2>
+<p>SAS Event Stream Processing creates a PersistentVolumeClaim (PVC) with a default 
+storage capacity of 5 GB. Follow these instructions to change that value.</p>
+<h2 id="140228096710592instructions">Instructions</h2>
+<ol>
+<li>
+<p>Copy the file <code>$deploy/sas-bases/examples/sas-event-stream-processing-studio-app/storage/esp-storage-size-transformer.yaml</code>
+to a location of your choice under <code>$deploy/site-config</code>, such as <code>$deploy/site-config/sas-event-stream-processing-studio-app/storage</code>.</p>
+</li>
+<li>
+<p>Follow the instructions in the copied esp-storage-size-transformer.yaml
+file to change the values in that file as necessary.</p>
+</li>
+<li>
+<p>Add the full path of the copied file to the transformers block of the base
+kustomization.yaml file (<code>$deploy/kustomization.yaml</code>). For example, if you
+moved the file to <code>$deploy/site-config/backup</code>, you would modify the
+base kustomization.yaml file like this:</p>
+</li>
+</ol>
+<pre class="highlight"><code class="language-yaml">...
+transformers:
+...
+- site-config/backup/esp-storage-size-transformer.yaml
+...</code></pre>
+
+<p>After the base kustomization.yaml file is modified, deploy the software using
+the commands described in <a href="http://documentation.sas.com/?cdcId=itopscdc&amp;cdcVersion=default&amp;docsetId=dplyml0phy0dkr&amp;docsetTarget=titlepage.htm">SAS Viya Platform Deployment Guide</a>.</p>
+    </body>
+</html>

@@ -1,0 +1,19 @@
+###############################################################################
+# Kustomize patch configuration to remove "/" ingress rule mapped to SASDrive
+# as default Viya web root.
+# sas-drive-app has ingress configurations to set /SASDrive as default web root.
+###############################################################################
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: remove-drive-as-default-web-root
+patch: |-
+  - op: remove
+    path: /spec/rules/0/http/paths/1
+  - op: remove
+    path: /spec/rules/1/http/paths/1
+target:
+  version: v1
+  group: networking.k8s.io
+  kind: Ingress
+  name: sas-drive-app

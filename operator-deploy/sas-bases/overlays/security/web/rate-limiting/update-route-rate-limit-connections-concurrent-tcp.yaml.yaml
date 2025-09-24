@@ -1,0 +1,17 @@
+---
+apiVersion: builtin
+kind: ReplacementTransformer
+metadata:
+  name: update-rateLimitConnectionsConcurrentTcp-annotation-route-transformer
+replacements:
+- source:
+    kind: ConfigMap
+    name: route-rate-limit-inputs
+    fieldPath: data.rateLimitConnectionsConcurrentTcp
+  targets:
+  - select:
+      kind: Route
+    fieldPaths:
+      - metadata.annotations.haproxy\.router\.openshift\.io/rate-limit-connections\.concurrent-tcp
+    options:
+      create: true
