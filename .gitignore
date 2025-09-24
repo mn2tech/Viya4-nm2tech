@@ -1,0 +1,7 @@
+# Sensitive files
+viya4-iac-aws/terraform.tfstate
+viya4-iac-aws/terraform.tfstate.backup
+viya4-iac-aws/*.conf
+viya4-iac-aws/plan_output.txt
+kubeconfig/
+*.log
